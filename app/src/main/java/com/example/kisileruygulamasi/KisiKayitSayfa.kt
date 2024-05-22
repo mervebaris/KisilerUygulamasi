@@ -24,8 +24,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import com.example.kisileruygulamasi.viewmodel.KisiKayitViewModel
 
 class KisiKayitSayfa: Screen {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -36,6 +38,9 @@ class KisiKayitSayfa: Screen {
         val tfKisiAd = remember { mutableStateOf("") }
         val tfKisiTel = remember { mutableStateOf("") }
         val localFocusManager = LocalFocusManager.current // geri tuşuna bastığımızda tek seferde textfielddaki seçimi kaldıracağız (normalde 2 kere basarak geri dönmek zorundayız bu kod ile tek seferde geri döneceğiz)
+
+        val viewModel = rememberScreenModel { KisiKayitViewModel() }
+
         Scaffold (
             topBar = {
                 TopAppBar(title = { Text(text = "Kişi Kayıt") })
@@ -59,7 +64,7 @@ class KisiKayitSayfa: Screen {
                     Button(onClick = {
                         val kisi_adi = tfKisiAd.value
                         val kisi_tel = tfKisiTel.value
-                        Log.e("Kişi Kayıt", "$kisi_adi - $kisi_tel")
+                        viewModel.Kayit(kisi_adi,kisi_tel)
 
                         localFocusManager.clearFocus()
 

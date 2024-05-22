@@ -24,9 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.example.kisileruygulamasi.entity.Kisiler
+import com.example.kisileruygulamasi.viewmodel.KisiDetayViewModel
+import com.example.kisileruygulamasi.viewmodel.KisiKayitViewModel
 
 class KisiDetaySayfa(private val gelenKisi:Kisiler): Screen {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -37,7 +40,9 @@ class KisiDetaySayfa(private val gelenKisi:Kisiler): Screen {
         val tfKisiAd = remember { mutableStateOf("") }
         val tfKisiTel = remember { mutableStateOf("") }
         val localFocusManager = LocalFocusManager.current // geri tuşuna bastığımızda tek seferde textfielddaki seçimi kaldıracağız (normalde 2 kere basarak geri dönmek zorundayız bu kod ile tek seferde geri döneceğiz)
-        
+
+        val viewModel = rememberScreenModel { KisiDetayViewModel() }
+
         LaunchedEffect(key1 = true) {
             tfKisiAd.value = gelenKisi.kisi_ad
             tfKisiTel.value = gelenKisi.kisi_tel
@@ -67,7 +72,7 @@ class KisiDetaySayfa(private val gelenKisi:Kisiler): Screen {
                     Button(onClick = {
                         val kisi_adi = tfKisiAd.value
                         val kisi_tel = tfKisiTel.value
-                        Log.e("Kişi Güncelle", "${gelenKisi.kisi_id} $kisi_adi - $kisi_tel")
+                        viewModel.guncelleme(gelenKisi.kisi_id, kisi_adi, kisi_tel)
 
                         localFocusManager.clearFocus()
 

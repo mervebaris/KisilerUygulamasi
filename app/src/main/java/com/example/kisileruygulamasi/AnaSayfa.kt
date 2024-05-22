@@ -21,6 +21,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.example.kisileruygulamasi.entity.Kisiler
+import com.example.kisileruygulamasi.viewmodel.AnaSayfaViewModel
 
 class AnaSayfa: Screen {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -42,15 +44,9 @@ class AnaSayfa: Screen {
         val navigator = LocalNavigator.current
         val aramaYapiliyorMu = remember { mutableStateOf(false) }
         val tf = remember { mutableStateOf("") }
-        val kisilerListesi = remember { mutableStateListOf<Kisiler>() }
-        
-        LaunchedEffect(key1 = true) {
-            val k1 = Kisiler(1,"Ahmet","11111")
-            val k2 = Kisiler(1,"Zeynep","22222")
+        val viewModel = remember { AnaSayfaViewModel() }
+        val kisilerListesi = viewModel.kisilerListesi.observeAsState(listOf())  //veri işlemlerinde bunu yapıyoruz
 
-            kisilerListesi.add(k1)
-            kisilerListesi.add(k2)
-        }
 
         Scaffold (
             topBar = {
@@ -61,14 +57,14 @@ class AnaSayfa: Screen {
                                 value = tf.value,
                                 onValueChange = {
                                     tf.value = it
-                                    Log.e("Kişi arama", it)
+                                    viewModel.ara(it)
                                                 },
                                 label = { Text(text = "Ara")},
                                 colors = TextFieldDefaults.colors(
                                     focusedContainerColor = Color.Transparent,
-                                    focusedTextColor = Color.Black,
+                                    focusedTextColor = Color.Blue,
                                     focusedLabelColor = Color.White,
-                                    focusedIndicatorColor = Color.White,
+                                    focusedIndicatorColor = Color.Black,
                                     unfocusedLabelColor = Color.White,
                                     unfocusedIndicatorColor = Color.White,
                                 ),
@@ -109,9 +105,9 @@ class AnaSayfa: Screen {
             content = {
                 LazyColumn {
                    items(
-                       count = kisilerListesi.count(),
+                       count = kisilerListesi.value!!.count(),    //!!nullable yapıdan korumak için yaptığımız yapı
                        itemContent = {
-                           val kisi = kisilerListesi[it]
+                           val kisi = kisilerListesi.value!![it]
                            Card(modifier = Modifier
                                .padding(all = 5.dp)
                                .fillMaxWidth()
@@ -121,7 +117,7 @@ class AnaSayfa: Screen {
 
                                }) {
                                    Row (modifier = Modifier
-                                       .padding(all = 10.dp)
+                                       .padding(all = 80.dp)
                                        .fillMaxWidth(),
                                        verticalAlignment = Alignment.CenterVertically,
                                        horizontalArrangement = Arrangement.SpaceBetween
@@ -133,7 +129,7 @@ class AnaSayfa: Screen {
 
 
                                        IconButton(onClick = {
-                                         Log.e("Kişi Sil", "${kisi.kisi_id}")
+                                         viewModel.sil(kisi.kisi_id)
                                        }) {
                                            Icon(painter = painterResource(id = R.drawable.sil_resim),
                                                contentDescription = "", tint = Color.Gray)

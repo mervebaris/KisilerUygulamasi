@@ -86,7 +86,10 @@ class AnaSayfa: Screen {
                                 aramaYapiliyorMu.value = false
                                 tf.value = ""
                             }) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 27c197c (Initial commit)
                                 Icon(painter = painterResource(id = R.drawable.kapat_resim),
                                     contentDescription = "", tint = Color.Black)
                             }
@@ -127,8 +130,19 @@ class AnaSayfa: Screen {
                                        horizontalArrangement = Arrangement.SpaceBetween
                                    ) {
                                        Text(text = "${kisi.kisi_ad} - ${kisi.kisi_tel}")
+<<<<<<< HEAD
                                        Icon(painter = painterResource(id = R.drawable.sil_resim),
                                            contentDescription = "", tint = Color.Gray)
+=======
+
+                                       IconButton(onClick = {
+                                         Log.e("Kişi Sil", "${kisi.kisi_id}")
+                                       }) {
+                                           Icon(painter = painterResource(id = R.drawable.sil_resim),
+                                               contentDescription = "", tint = Color.Gray)
+                                       }
+
+>>>>>>> 27c197c (Initial commit)
 
                                    }
 
